@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote of the Day</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-image: url('pink sea.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+        }
+        .quote-box {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+        }
+        .quote-text {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .author {
+            font-size: 1em;
+            margin-top: 10px;
+            color: #555;
+        }
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .actions button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .actions .new-quote {
+            background-color: #6d86c5;
+            color: white;
+        }
+        .actions .favorite, .actions .delete-favorite {
+            background-color: #a44a82;
+            color: white;
+        }
+        .actions .share {
+            background-color: #ba000090;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quote-box">
+            <div class="quote-text" id="quoteText">"The journey of a thousand miles begins with one step."</div>
+            <div class="author" id="author">- Lao Tzu</div>
+            <div class="actions">
+                <button class="new-quote" onclick="newQuote()">New Quote</button>
+                <button class="favorite" onclick="addToFavorites()">Add to Favorite</button>
+                <button class="share" onclick="shareQuote()">Share</button>
+                <button class="delete-favorite" onclick="deleteFavorite()">Delete Favorite</button>
+            </div>
+            <div id="favorites" style="margin-top: 20px; color: #333;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample quotes array
+        const quotes = [
+            { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
+            { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+            { text: "In the end, we only regret the chances we didn't take.", author: "Lewis Carroll" },
+            { text: "Life is what happens when you're busy making other plans.", author: "John Lennon" },
+            { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" }
+        ];
+
+        let favorites = [];
+
+        function newQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const quote = quotes[randomIndex];
+            document.getElementById('quoteText').textContent = `"${quote.text}"`;
+            document.getElementById('author').textContent = `- ${quote.author}`;
+        }
+
+        function addToFavorites() {
+            const currentQuote = document.getElementById('quoteText').textContent;
+            const currentAuthor = document.getElementById('author').textContent;
+            const favorite = `${currentQuote} ${currentAuthor}`;
+            if (!favorites.includes(favorite)) {
+                favorites.push(favorite);
+                displayFavorites();
+            }
+        }
+
+        function deleteFavorite() {
+            favorites.pop();
+            displayFavorites();
+        }
+
+        function displayFavorites() {
+            const favoritesDiv = document.getElementById('favorites');
+            favoritesDiv.innerHTML = "<h3>Favorite Quotes:</h3>" + favorites.map((fav, index) => `<p>${index + 1}. ${fav}</p>`).join('');
+        }
+
+        function shareQuote() {
+            const quoteToShare = document.getElementById('quoteText').textContent + " " + document.getElementById('author').textContent;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Quote of the Day',
+                    text: quoteToShare
+                });
+            } else {
+                alert("Sharing is not supported in this browser.");
+            }
+        }
+    </script>
+</body>
+</html>
